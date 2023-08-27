@@ -6,7 +6,9 @@ const Todo = () => {
     let [todos, setTodos] = useState([])
     let [idEditing, setIsEditing] = useState(false)
     let [editIndex, setEditIndex] = useState(null)
+    let [disable ,setDisable ] =useState(false)
 
+ 
     let addTodo = () => {
         let newTodo = todos
         newTodo.unshift(inputVal)
@@ -33,6 +35,7 @@ const Todo = () => {
         setTodos([...todos])
         setIsEditing(false)
         setInputVal('')
+        setDisable(false)
     }
     return (
         <>
@@ -43,11 +46,11 @@ const Todo = () => {
                     <input
                         onChange={(e) => { setInputVal(e.target.value) }} value={inputVal}
                         className='bg-white p-2 font-semibold rounded-xl w-[70%] border-b-4 outline-2  ' />
-                    {idEditing ? <button className='bg-red-500 rounded-lg  decoration-slate-300 text-white p-2 '
+                    {idEditing ? <button  className='bg-red-500 rounded-lg  decoration-slate-300 text-white p-2 '
                         onClick={edittodo}
 
                     >Done</button> :
-                        <button className='bg-blue-500 rounded-lg decoration-slate-300 text-white p-2 m-1 sm:m-2'
+                        <button  className='bg-blue-500 rounded-lg decoration-slate-300 text-white p-2 m-1 sm:m-2'
                             onClick={addTodo}
 
                         >Add todo</button>
@@ -61,8 +64,10 @@ const Todo = () => {
                             <div  className='flex flex-col items-center md:flex-row  gap-y-2 w-[90%] md:w-[60%] bg-blue-100 rounded-lg p-4 m-2 bg-blue  justify-between ' key={index}>
                                 <p className='w-[100%] md:w-[auto] grow  bg-white font-bold text-lg p-4 rounded-lg  '>{value}</p>
                                 <div>
-                                    <button className='bg-red-500 flex-grow text-white p-4 rounded-lg mx-4 md:mx-1 w-[120px] md:w-auto ' onClick={() => handleDelete(index)}>Delete</button>
-                                    <button className='bg-red-500 text-white p-4 rounded-lg w-[120px]  md:w-auto' onClick={() => handleEdit(index)}>Edit</button>
+                                    <button disabled={disable} className='bg-red-500 flex-grow text-white p-4 rounded-lg mx-4 md:mx-1 w-[120px] md:w-auto ' onClick={() => handleDelete(index)}>Delete</button>
+                                    <button disabled={disable} className='bg-red-500 text-white p-4 rounded-lg w-[120px]  md:w-auto' onClick={() =>{ 
+                                      setDisable(true),
+                                      handleEdit(index)}}>Edit</button>
                                 </div>
                             </div>
                        )
