@@ -1,95 +1,78 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client'
+import React, { useState } from 'react'
 
-export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+const Todo = () => {
+    const [inputVal, setInputVal] = useState("")
+    let [todos, setTodos] = useState([])
+    let [idEditing, setIsEditing] = useState(false)
+    let [editIndex, setEditIndex] = useState(null)
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+    let addTodo = () => {
+        let newTodo = todos
+        newTodo.unshift(inputVal)
+        setTodos([...newTodo])
+        setInputVal('')
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+    }
+    let handleDelete = (ind) => {
+        console.log(ind)
+        let newtodo = todos
+        newtodo.splice(ind, 1)
+        setTodos([...newtodo])
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+    }
+    let handleEdit = (ind) => {
+        setInputVal(todos[ind])
+        setIsEditing(true)
+        setEditIndex(ind)
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+    }
+    let edittodo = () => {
+        let newtodo = inputVal
+        todos.splice(editIndex, 1, newtodo)
+        setTodos([...todos])
+        setIsEditing(false)
+        setInputVal('')
+    }
+    return (
+        <>
+            <div className='w-screen bg-white min-h-screen flex flex-col items-center '>
+                <h1 className='text-blue-800 font-extrabold text-5xl  sm:text-8xl my-4 mb-8 '>To-do App</h1>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+                <div className='bg-blue-100 p-5 flex items-center  rounded-lg justify-between w-[90%] md:w-[60%]'>
+                    <input
+                        onChange={(e) => { setInputVal(e.target.value) }} value={inputVal}
+                        className='bg-white p-2 font-semibold rounded-xl w-[70%] border-b-4 outline-2  ' />
+                    {idEditing ? <button className='bg-red-500 rounded-lg  decoration-slate-300 text-white p-2 '
+                        onClick={edittodo}
+
+                    >Done</button> :
+                        <button className='bg-blue-500 rounded-lg decoration-slate-300 text-white p-2 m-1 sm:m-2'
+                            onClick={addTodo}
+
+                        >Add todo</button>
+                    }
+
+                </div>
+
+                {todos.map((value, index) => {
+                    return (
+                     
+                            <div  className='flex flex-col items-center md:flex-row  gap-y-2 w-[90%] md:w-[60%] bg-blue-100 rounded-lg p-4 m-2 bg-blue  justify-between ' key={index}>
+                                <p className='w-[100%] md:w-[auto] grow  bg-white font-bold text-lg p-4 rounded-lg  '>{value}</p>
+                                <div>
+                                    <button className='bg-red-500 flex-grow text-white p-4 rounded-lg mx-4 md:mx-1 w-[120px] md:w-auto ' onClick={() => handleDelete(index)}>Delete</button>
+                                    <button className='bg-red-500 text-white p-4 rounded-lg w-[120px]  md:w-auto' onClick={() => handleEdit(index)}>Edit</button>
+                                </div>
+                            </div>
+                       )
+                })}
+
+            </div>
+
+
+        </>
+    )
 }
+
+export default Todo
